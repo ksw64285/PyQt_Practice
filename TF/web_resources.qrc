@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/favicon.ico</file>
+    <file>images/back.png</file>
+    <file>images/forward.png</file>
+    <file>images/reload.png</file>
+    <file>images/home.png</file>
+    <file>images/search.png</file>
+</qresource>
+</RCC>
