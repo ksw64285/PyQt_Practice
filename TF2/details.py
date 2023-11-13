@@ -1,5 +1,9 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+import time
 
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMessageBox, QProgressDialog, QApplication
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPalette, QColor
 
 class DetailsWindow(QtWidgets.QWidget):
     def __init__(self, data):
@@ -30,6 +34,7 @@ class DetailsWindow(QtWidgets.QWidget):
         self.pushButton_reset.setFont(font)
         self.pushButton_reset.setStyleSheet("background-color:rgb(33, 35, 39); color: rgb(255, 255, 255);")
         self.pushButton_reset.setObjectName("pushButton_reset")
+        self.pushButton_reset.clicked.connect(self.reset_clicked) # 클릭 이벤트 연결
         self.verticalLayout_7.addWidget(self.pushButton_reset)
         self.widget1 = QtWidgets.QWidget(parent=Form)
         self.widget1.setGeometry(QtCore.QRect(30, 40, 269, 109))
@@ -169,6 +174,37 @@ class DetailsWindow(QtWidgets.QWidget):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def reset_clicked(self):
+        msgBox = QMessageBox()
+        msgBox.setText("진짜 정말로 진행하시겠습니까?")
+        msgBox.setWindowTitle("reset 확인")
+        msgBox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msgBox.button(QMessageBox.StandardButton.Yes).setText("Yes")
+        msgBox.button(QMessageBox.StandardButton.No).setText("No")
+        msgBox.setIcon(QMessageBox.Icon.NoIcon) # 아이콘 삭제
+
+        reply = msgBox.exec()
+
+        if reply == QMessageBox.StandardButton.Yes:
+            progress_dialog = QProgressDialog("리셋중...", "취소", 0, 100, self)
+            progress_dialog.setWindowTitle("Reset 진행중")
+            progress_dialog.setWindowModality(Qt.WindowModality.WindowModal)
+            progress_dialog.setAutoClose(True)
+
+            # 스타일 시트 설정
+            progress_dialog.setStyleSheet("""
+                QLabel {color: white;}
+                QPushButton {color: red;}
+                """)
+
+            for i in range(101):
+                progress_dialog.setValue(i) # 진행바 업데이트
+                QApplication.processEvents() # GUI 이벤트 처리
+                if progress_dialog.wasCanceled():
+                    break
+                time.sleep(0.05) # 시뮬레이션을 위한 sleep
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
